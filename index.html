@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Password Strength Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    .strength {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .weak {
+      color: red;
+    }
+    .moderate {
+      color: orange;
+    }
+    .strong {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Password Strength Checker</h1>
+  <label for="password">Enter Password:</label>
+  <input type="password" id="password" oninput="checkPasswordStrength()" />
+  <p class="strength" id="strength-output">Strength: </p>
+
+  <script>
+      // Function to check password strength
+function checkPasswordStrength() {
+  const password = document.getElementById("password").value;
+  const output = document.getElementById("strength-output");
+
+  // Define regex patterns
+  const patterns = {
+    lowercase: /[a-z]/,
+    uppercase: /[A-Z]/,
+    digit: /\d/,
+    specialChar: /[!@#$%^&*(),.?":{}|<>]/,
+    length: password.length >= 12,
+  };
+
+  // Check which criteria are met
+  let strengthScore = 0;
+  if (patterns.lowercase.test(password)) strengthScore++;
+  if (patterns.uppercase.test(password)) strengthScore++;
+  if (patterns.digit.test(password)) strengthScore++;
+  if (patterns.specialChar.test(password)) strengthScore++;
+  if (patterns.length) strengthScore++;
+
+  // Evaluate strength
+  let strength = "";
+  let className = "";
+  if (strengthScore <= 2) {
+    strength = "Weak";
+    className = "weak";
+  } else if (strengthScore <= 4) {
+    strength = "Moderate";
+    className = "moderate";
+  } else {
+    strength = "Strong";
+    className = "strong";
+  }
+
+  // Update output
+  output.textContent = `Strength: ${strength}`;
+  output.className = `strength ${className}`;
+}
+
+
+
+function calculateEntropy(password) {
+  const charSetSize = 
+    (/[a-z]/.test(password) ? 26 : 0) +
+    (/[A-Z]/.test(password) ? 26 : 0) +
+    (/\d/.test(password) ? 10 : 0) +
+    (/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 32 : 0);
+  return password.length * Math.log2(charSetSize || 1);
+}
+
+
+
+  </script>
+</body>
+</html>
